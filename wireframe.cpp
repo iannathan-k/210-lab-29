@@ -35,6 +35,15 @@ int main() {
         // Raise error
     // Close file
 
+    reactor["core"][0].push_back("ROD_1");
+    reactor["core"][0].push_back("ROD_2");
+    reactor["core"][1].push_back("250MW");
+    reactor["core"][2].push_back("367C");
+
+    output(reactor);
+    step(reactor);
+    output(reactor);
+
     return 0;
 }
 
@@ -43,6 +52,11 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         // Randomly fluctuate electricity and temperature
         // Randomly decide to start a meltdown
         // Randomly decide to active/deactive any components
+
+    for (auto& system : reactor) {
+        // Dummy code just pops something
+        system.second[0].pop_back();
+    }
 }
 
 void output(const map<string, array<list<string>, 3>>& reactor) {
@@ -52,8 +66,22 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
         // Output temperatures
 
     for (auto system : reactor) {
-        for (auto data : system.second) {
-            
+        cout << "Active Components: "; 
+        for (auto data : system.second[0]) {
+            cout << data << " ";
         }
+        cout << endl;
+
+        cout << "Power Draws: "; 
+        for (auto data : system.second[1]) {
+            cout << data << " ";
+        }
+        cout << endl;
+
+        cout << "Temperatures: "; 
+        for (auto data : system.second[2]) {
+            cout << data << " ";
+        }
+        cout << endl;
     }
 }
