@@ -1,0 +1,8 @@
+Overview
+My project will simulate a nuclear power plant and its components, designed to measure
+and manage the cores over time, and hopefully prevent or predict any meltdowns!
+
+Implementation
+I will use a map for each of the different systems which help manage the nuclear power plant,
+e.g core, cooling, waste. Under each of them, there will be 3 lists for 3 different activated items.
+e.g active elements
