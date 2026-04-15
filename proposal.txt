@@ -1,8 +1,15 @@
 Overview
-My project will simulate a nuclear power plant and its components, designed to measure
+My project will simulate a nuclear power plant over the next 72 hours and its components, designed to measure
 and manage the cores over time, and hopefully prevent or predict any meltdowns!
 
 Implementation
-I will use a map for each of the different systems which help manage the nuclear power plant,
-e.g core, cooling, waste. Under each of them, there will be 3 lists for 3 different activated items.
-e.g active elements
+I will use a map for each of the different systems which help manage the nuclear power plant.
+e.g core, cooling, waste as the keys. Under each of them there will be 3 lists for the data.
+e.g active elements, electricity draws, temperatures. The map's value will be an array of
+these 3 list data points.
+
+Simulated Events
+The simulation will have 3 possible events. Normal electricity and temperature fluctuation,
+Unexpected temperature spikes, and activation or deactivation of elements. At any given time
+period, temperature and electricity may fluctuate, temperature may get dangerously hot,
+or some elements like cooling rods may be activated/deactivated.
