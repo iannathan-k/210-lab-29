@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// COMSC-210 | Lab 29 | Ian Kusmiantoro
+
 bool testFluctuate(const array<list<string>, 3>& reactor) {
     array<list<string>, 3> copy = reactor;
 
