@@ -23,6 +23,11 @@ const int MIN_MELTDOWN_TEMP = 1200;
 const int MAX_MELTDOWN_POWER = 1000000;
 const int MIN_MELTDOWN_POWER = 500000;
 
+const int PROB_FLUX = 80;
+const int PROB_ACT = 20;
+const int PROB_DEACT = 15;
+const int PROB_MELT = 5;
+
 const string SYSTEM_1 = "CORE";
 const string SYSTEM_2 = "COOLING";
 const string SYSTEM_3 = "WASTE";
@@ -62,13 +67,34 @@ int main() {
     ifstream fin;
     fin.open("initial.txt");
 
-    for (int i = 0; i < 3; i++) {
-        int input;
-        fin >> input;
-
-        reactor[SYSTEM_1][ELE_LIST].
+    if (!fin.good()) {
+        cout << "Something went wrong with reading" << endl;
+        exit(1);
     }
 
+    for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 3; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_1][i].push_back(input);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_2][i].push_back(input);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_3][i].push_back(input);
+        }
+    }
+    
     output(reactor);
 
     for (int i = 1; i <= 24; i++) {
@@ -91,28 +117,28 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         cout << "~~~~~~~~ " << system.first << " ~~~~~~~~" << endl;
          // 80% probability of fluctuations
         int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
-        if (prob < 80) {
+        if (prob <= PROB_FLUX) {
             cout << "Normal Fluctuations Occuring..." << endl;
             fluctuate(system.second);
         }
 
         // Deactivate an element
         prob = rand() % MAX + 1;
-        if (prob < 15 && system.second[0].size() > 0) {
+        if (prob <= PROB_DEACT && system.second[0].size() > 0) {
             cout << "Deactivating an element..." << endl;
             deactivateElement(system.second);
         }
 
         // Active an element
         prob = rand() % MAX + 1;
-        if (prob < 20) {
+        if (prob <= PROB_ACT) {
             cout << "Activating an element..." << endl;
             activateElement(system.second, system.first);
         }
 
         // Temperature surge!!!
         prob = rand() % MAX + 1;
-        if (prob < 5) {
+        if (prob <= PROB_MELT) {
             cout << "!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
             surge(system.second);
         }
@@ -153,7 +179,7 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
     if (system_name == SYSTEM_2) {
         prefix = "ROD_";
     } else if (system_name == SYSTEM_3) {
-        prefix = "TANK_";
+        prefix = "PUMP_";
     }
 
     system[ELE_LIST].push_back(prefix + to_string(system[ELE_LIST].size() + 1));
