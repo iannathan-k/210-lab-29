@@ -8,6 +8,10 @@
 
 using namespace std;
 
+const int ELE_LIST = 0;
+const int POWER_LIST = 1;
+const int TEMP_LIST = 2;
+
 const int MAX = 100;
 const int MAX_POWER = 250000;
 const int MIN_POWER = 100000;
@@ -29,8 +33,8 @@ void step(map<string, array<list<string>, 3>>&);
     // Parameters: map of components
 void output(const map<string, array<list<string>, 3>>&);
 
-void activateElement(const list<string>&, string);
-void deactivateElement(const list<string>&);
+void activateElement(array<list<string>, 3>&, string);
+void deactivateElement(array<list<string>, 3>&);
 
 // Define main
 int main() {
@@ -52,15 +56,15 @@ int main() {
         // Raise error
     // Close file
 
-    reactor["core"][0].push_back("BOILER_1");
-    reactor["core"][1].push_back("250MW");
-    reactor["core"][2].push_back("367C");
-    reactor["cooling"][0].push_back("ROD_1");
-    reactor["cooling"][1].push_back("250MW");
-    reactor["cooling"][2].push_back("367C");
-    reactor["waste"][0].push_back("TANK_1");
-    reactor["waste"][1].push_back("250MW");
-    reactor["waste"][2].push_back("367C");
+    reactor[SYSTEM_1][ELE_LIST].push_back("BOILER_1");
+    reactor[SYSTEM_1][POWER_LIST].push_back("250MW");
+    reactor[SYSTEM_1][TEMP_LIST].push_back("367C");
+    reactor[SYSTEM_2][ELE_LIST].push_back("ROD_1");
+    reactor[SYSTEM_2][POWER_LIST].push_back("250MW");
+    reactor[SYSTEM_2][TEMP_LIST].push_back("367C");
+    reactor[SYSTEM_3][ELE_LIST].push_back("TANK_1");
+    reactor[SYSTEM_3][POWER_LIST].push_back("250MW");
+    reactor[SYSTEM_3][TEMP_LIST].push_back("367C");
 
     output(reactor);
 
@@ -101,18 +105,14 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         prob = rand() % MAX + 1;
         if (prob < 15 && system.second[0].size() > 0) {
             cout << "Deactivating an element..." << endl;
-            system.second[0].pop_back();
-            system.second[1].pop_back();
-            system.second[2].pop_back();
+            deactivateElement(system.second);
         }
 
         // Active an element
         prob = rand() % MAX + 1;
         if (prob < 20) {
             cout << "Activating an element..." << endl;
-            system.second[0].push_back("ROD_" + to_string(system.second[0].size() + 1));
-            system.second[1].push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
-            system.second[2].push_back(to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
+            activateElement(system.second, system.first);
         }
 
         // Temperature surge!!!
@@ -158,17 +158,22 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
     }
 }
 
-void activateElement(const list<string>& system, string system_name) {
+void activateElement(array<list<string>, 3>& system, string system_name) {
     string prefix = "BOILER_";
     if (system_name == SYSTEM_2) {
         prefix = "ROD_";
     } else if (system_name == SYSTEM_3) {
         prefix = "TANK_";
-    } else {
-
     }
 
-    system.push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
-    system.push_back(to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
+    system[ELE_LIST].push_back(prefix + to_string(system[ELE_LIST].size() + 1));
+    system[POWER_LIST].push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
+    system[TEMP_LIST].push_back(to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
     
+}
+
+void deactivateElement(array<list<string>, 3>& system) {
+    system[ELE_LIST].pop_back();
+    system[POWER_LIST].pop_back();
+    system[TEMP_LIST].pop_back();
 }
