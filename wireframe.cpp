@@ -8,6 +8,12 @@
 
 using namespace std;
 
+const int MAX = 100;
+const int MAX_POWER = 250000;
+const int MIN_POWER = 100000;
+const int MAX_TEMP = 1000;
+const int MIN_TEMP = 250;
+
 // Define function to simulate reactor over 1 time period
     // Parameters: map of components
 void step(map<string, array<list<string>, 3>>&);
@@ -17,7 +23,7 @@ void output(const map<string, array<list<string>, 3>>&);
 
 // Define main
 int main() {
-
+    srand(time(0));
     // Declare the map
     map<string, array<list<string>, 3>> reactor;
     // Initialize the map
@@ -48,6 +54,14 @@ int main() {
 }
 
 void step(map<string, array<list<string>, 3>>& reactor) {
+    int prob = rand() % MAX; // Generates numbers 0 to 99 inclusive
+
+    // 80% probability of fluctuations
+    if (prob < 80) {
+        for (string& power : reactor["core"][1]) {
+            power = static_cast<string>(rand() % MAX_POWER);
+        }
+    }
     // For each system
         // Randomly fluctuate electricity and temperature
         // Randomly decide to start a meltdown
