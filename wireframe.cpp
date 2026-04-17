@@ -15,6 +15,8 @@ const int MAX_TEMP = 1000;
 const int MIN_TEMP = 250;
 const int MAX_MELTDOWN_TEMP = 3000;
 const int MIN_MELTDOWN_TEMP = 1200;
+const int MAX_MELTDOWN_POWER = 1000000;
+const int MIN_MELTDOWN_POWER = 500000;
 
 // Define function to simulate reactor over 1 time period
     // Parameters: map of components
@@ -44,22 +46,35 @@ int main() {
     // Close file
 
     reactor["core"][0].push_back("ROD_1");
-    reactor["core"][0].push_back("ROD_2");
     reactor["core"][1].push_back("250MW");
     reactor["core"][2].push_back("367C");
 
     output(reactor);
-    step(reactor);
-    output(reactor);
+
+    for (int i = 1; i <= 24; i++) {
+        cout << "===== HOUR " << i << " =====" << endl;
+        step(reactor);
+        output(reactor);
+    }
 
     return 0;
 }
 
 void step(map<string, array<list<string>, 3>>& reactor) {
-    int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
+
+    // For each system
+        // Randomly fluctuate electricity and temperature
+        // Randomly decide to start a meltdown
+        // Randomly decide to active/deactive any components
+
+    for (auto& system : reactor.second) {
+
+    }
 
     // 80% probability of fluctuations
+    int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
     if (prob < 80) {
+        cout << "Normal Fluctuations Occuring..." << endl;
         // Fluctuate Powers
         for (string& power : reactor["core"][1]) {
             power = to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW";
@@ -67,41 +82,41 @@ void step(map<string, array<list<string>, 3>>& reactor) {
 
         // Fluctuare Temps
         for (string& temp : reactor["core"][2]) {
-            temp = to_string(rand() & (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
+            temp = to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
         }
     }
 
     // Deactivate an element
-    if (prob < 20) {
+    prob = rand() % MAX + 1;
+    if (prob < 15 && reactor["core"][0].size() > 0) {
+        cout << "Deactivating an element..." << endl;
         reactor["core"][0].pop_back();
         reactor["core"][1].pop_back();
         reactor["core"][2].pop_back();
     }
 
     // Active an element
-    if (prob < 30) {
-        reactor["core"][0].push_back("ROD_" + to_string(reactor["core"][0].size()));
+    prob = rand() % MAX + 1;
+    if (prob < 20) {
+        cout << "Activating an element..." << endl;
+        reactor["core"][0].push_back("ROD_" + to_string(reactor["core"][0].size() + 1));
         reactor["core"][1].push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
-        reactor["core"][2].push_back(to_string(rand() & (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
+        reactor["core"][2].push_back(to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
     }
 
     // Temperature surge!!!
+    prob = rand() % MAX + 1;
     if (prob < 5) {
-        for (string& temp : reactor["core"][2]) {
-            temp = to_string(rand() & (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C"
+        cout << "!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
+        for (string& power : reactor["core"][1]) {
+            power = to_string(rand() % (MAX_MELTDOWN_POWER - MIN_MELTDOWN_POWER + 1) + MIN_MELTDOWN_POWER) + "MW";
         }
 
-        reactor["core"][2].push_back(to_string(rand() & (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C");
+        for (string& temp : reactor["core"][2]) {
+            temp = to_string(rand() % (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C";
+        }
     }
-    // For each system
-        // Randomly fluctuate electricity and temperature
-        // Randomly decide to start a meltdown
-        // Randomly decide to active/deactive any components
-
-    for (auto& system : reactor) {
-        // Dummy code just pops something
-        system.second[0].pop_back();
-    }
+    
 }
 
 void output(const map<string, array<list<string>, 3>>& reactor) {
