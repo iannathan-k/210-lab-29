@@ -1,0 +1,10 @@
+I will write short driver programs to test each of the possible actions and their respective functions.
+- I will test fluctuate by passing in an array containg a few elements and their powers and temps set to 0
+    and see if they are corretly replaced.
+- I will test active element by having an array of no elements and seeing if one gets added
+- I will test deactivate element by having an arrray with 1 element and seeing if the one gets removed
+- I will test meltdown by having an array containing a few elements and their power and temps set to 0
+    and seeing if they are correctly replaced with powers and temps in the meltdown range.
+
+I will also test the step functions
+- Pass in an array and ensure that it is modified correctly and nothing goes wrong

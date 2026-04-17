@@ -24,8 +24,8 @@ const int MAX_MELTDOWN_POWER = 1000000;
 const int MIN_MELTDOWN_POWER = 500000;
 
 const int PROB_FLUX = 80;
-const int PROB_ACT = 20;
-const int PROB_DEACT = 15;
+const int PROB_ACT = 15;
+const int PROB_DEACT = 20;
 const int PROB_MELT = 5;
 
 const string SYSTEM_1 = "CORE";
@@ -72,7 +72,7 @@ int main() {
         exit(1);
     }
 
-    for (int j = 0; j < 3; j++) {
+    for (int j = 0; j < 12; j++) {
         for (int i = 0; i < 3; i++) {
             string input;
             fin >> input;
@@ -97,7 +97,7 @@ int main() {
     
     output(reactor);
 
-    for (int i = 1; i <= 24; i++) {
+    for (int i = 1; i <= 48; i++) {
         cout << "===== HOUR " << i << " =====" << endl;
         step(reactor);
         output(reactor);
