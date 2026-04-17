@@ -13,6 +13,8 @@ const int MAX_POWER = 250000;
 const int MIN_POWER = 100000;
 const int MAX_TEMP = 1000;
 const int MIN_TEMP = 250;
+const int MAX_MELTDOWN_TEMP = 3000;
+const int MIN_MELTDOWN_TEMP = 1200;
 
 // Define function to simulate reactor over 1 time period
     // Parameters: map of components
@@ -54,13 +56,42 @@ int main() {
 }
 
 void step(map<string, array<list<string>, 3>>& reactor) {
-    int prob = rand() % MAX; // Generates numbers 0 to 99 inclusive
+    int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
 
     // 80% probability of fluctuations
     if (prob < 80) {
+        // Fluctuate Powers
         for (string& power : reactor["core"][1]) {
-            power = static_cast<string>(rand() % MAX_POWER);
+            power = to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW";
         }
+
+        // Fluctuare Temps
+        for (string& temp : reactor["core"][2]) {
+            temp = to_string(rand() & (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
+        }
+    }
+
+    // Deactivate an element
+    if (prob < 20) {
+        reactor["core"][0].pop_back();
+        reactor["core"][1].pop_back();
+        reactor["core"][2].pop_back();
+    }
+
+    // Active an element
+    if (prob < 30) {
+        reactor["core"][0].push_back("ROD_" + to_string(reactor["core"][0].size()));
+        reactor["core"][1].push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
+        reactor["core"][2].push_back(to_string(rand() & (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
+    }
+
+    // Temperature surge!!!
+    if (prob < 5) {
+        for (string& temp : reactor["core"][2]) {
+            temp = to_string(rand() & (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C"
+        }
+
+        reactor["core"][2].push_back(to_string(rand() & (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C");
     }
     // For each system
         // Randomly fluctuate electricity and temperature
