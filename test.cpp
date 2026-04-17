@@ -42,7 +42,7 @@ bool testActivate(const array<list<string>, 3>& reactor) {
             cout << "More than 1 element added!" << endl;
             return false; // Did not only add 1 element!
         }
-        if (copy[i].size() == reactor[i].size() + 1) {
+        if (copy[i].size() == reactor[i].size()) {
             cout << "No elements added!" << endl;
             return false; // Did not only add 1 element!
         }

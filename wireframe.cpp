@@ -28,6 +28,11 @@ const int PROB_ACT = 15;
 const int PROB_DEACT = 20;
 const int PROB_MELT = 5;
 
+const int DATA_LENGTH = 3;
+const int DATA_COUNT = 12;
+
+const int DURATION = 48;
+
 const string SYSTEM_1 = "CORE";
 const string SYSTEM_2 = "COOLING";
 const string SYSTEM_3 = "WASTE";
@@ -72,22 +77,22 @@ int main() {
         exit(1);
     }
 
-    for (int j = 0; j < 12; j++) {
-        for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < DATA_COUNT; j++) {
+        for (int i = 0; i < DATA_LENGTH; i++) {
             string input;
             fin >> input;
 
             reactor[SYSTEM_1][i].push_back(input);
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DATA_LENGTH; i++) {
             string input;
             fin >> input;
 
             reactor[SYSTEM_2][i].push_back(input);
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < DATA_LENGTH; i++) {
             string input;
             fin >> input;
 
@@ -97,7 +102,7 @@ int main() {
     
     output(reactor);
 
-    for (int i = 1; i <= 48; i++) {
+    for (int i = 1; i <= DURATION; i++) {
         cout << "===== HOUR " << i << " =====" << endl;
         step(reactor);
         output(reactor);
@@ -124,7 +129,7 @@ void step(map<string, array<list<string>, 3>>& reactor) {
 
         // Deactivate an element
         prob = rand() % MAX + 1;
-        if (prob <= PROB_DEACT && system.second[0].size() > 0) {
+        if (prob <= PROB_DEACT && system.second[ELE_LIST].size() > 0) {
             cout << "Deactivating an element..." << endl;
             deactivateElement(system.second);
         }
@@ -155,19 +160,19 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
     for (auto system : reactor) {
         cout << "~~~~~~~~ " << system.first << " ~~~~~~~~" << endl;
         cout << "Active Components: "; 
-        for (auto data : system.second[0]) {
+        for (auto data : system.second[ELE_LIST]) {
             cout << data << " ";
         }
         cout << endl;
 
         cout << "Power Draws: "; 
-        for (auto data : system.second[1]) {
+        for (auto data : system.second[POWER_LIST]) {
             cout << data << " ";
         }
         cout << endl;
 
         cout << "Temperatures: "; 
-        for (auto data : system.second[2]) {
+        for (auto data : system.second[TEMP_LIST]) {
             cout << data << " ";
         }
         cout << endl;
