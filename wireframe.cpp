@@ -5,6 +5,7 @@
 #include <array>
 #include <list>
 #include <random>
+#include <fstream>
 
 using namespace std;
 
@@ -35,6 +36,8 @@ void output(const map<string, array<list<string>, 3>>&);
 
 void activateElement(array<list<string>, 3>&, string);
 void deactivateElement(array<list<string>, 3>&);
+void fluctuate(array<list<string>, 3>&);
+void surge(array<list<string>, 3>&);
 
 // Define main
 int main() {
@@ -56,15 +59,15 @@ int main() {
         // Raise error
     // Close file
 
-    reactor[SYSTEM_1][ELE_LIST].push_back("BOILER_1");
-    reactor[SYSTEM_1][POWER_LIST].push_back("250MW");
-    reactor[SYSTEM_1][TEMP_LIST].push_back("367C");
-    reactor[SYSTEM_2][ELE_LIST].push_back("ROD_1");
-    reactor[SYSTEM_2][POWER_LIST].push_back("250MW");
-    reactor[SYSTEM_2][TEMP_LIST].push_back("367C");
-    reactor[SYSTEM_3][ELE_LIST].push_back("TANK_1");
-    reactor[SYSTEM_3][POWER_LIST].push_back("250MW");
-    reactor[SYSTEM_3][TEMP_LIST].push_back("367C");
+    ifstream fin;
+    fin.open("initial.txt");
+
+    for (int i = 0; i < 3; i++) {
+        int input;
+        fin >> input;
+
+        reactor[SYSTEM_1][ELE_LIST].
+    }
 
     output(reactor);
 
@@ -90,15 +93,7 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
         if (prob < 80) {
             cout << "Normal Fluctuations Occuring..." << endl;
-            // Fluctuate Powers
-            for (string& power : system.second[1]) {
-                power = to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW";
-            }
-
-            // Fluctuare Temps
-            for (string& temp : system.second[2]) {
-                temp = to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
-            }
+            fluctuate(system.second);
         }
 
         // Deactivate an element
@@ -119,13 +114,7 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         prob = rand() % MAX + 1;
         if (prob < 5) {
             cout << "!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
-            for (string& power : system.second[1]) {
-                power = to_string(rand() % (MAX_MELTDOWN_POWER - MIN_MELTDOWN_POWER + 1) + MIN_MELTDOWN_POWER) + "MW";
-            }
-
-            for (string& temp : system.second[2]) {
-                temp = to_string(rand() % (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C";
-            }
+            surge(system.second);
         }
     }
 }
@@ -135,9 +124,10 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
         // Output active elements
         // Output electricity draws
         // Output temperatures
-    cout << "~~~~~~~ CURRENT ~~~~~~~~" << endl;
+    cout << "++++++++++ SNAPSHOT ++++++++++" << endl;
 
     for (auto system : reactor) {
+        cout << "~~~~~~~~ " << system.first << " ~~~~~~~~" << endl;
         cout << "Active Components: "; 
         for (auto data : system.second[0]) {
             cout << data << " ";
@@ -176,4 +166,28 @@ void deactivateElement(array<list<string>, 3>& system) {
     system[ELE_LIST].pop_back();
     system[POWER_LIST].pop_back();
     system[TEMP_LIST].pop_back();
+}
+
+void fluctuate(array<list<string>, 3>& system) {
+    // Fluctuate Powers
+    for (string& power : system[POWER_LIST]) {
+        power = to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW";
+    }
+
+    // Fluctuare Temps
+    for (string& temp : system[TEMP_LIST]) {
+        temp = to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
+    }
+}
+
+void surge(array<list<string>, 3>& system) {
+    // Surge Powers
+    for (string& power : system[POWER_LIST]) {
+        power = to_string(rand() % (MAX_MELTDOWN_POWER - MIN_MELTDOWN_POWER + 1) + MIN_MELTDOWN_POWER) + "MW";
+    }
+
+    // Surge Temps
+    for (string& temp : system[TEMP_LIST]) {
+        temp = to_string(rand() % (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C";
+    }
 }
