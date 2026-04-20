@@ -20,3 +20,10 @@ Fix: I went to the definition for loadData, and found that I was still doing .op
 
 Fix: Previous testing required the step function to catch when the list was empty, which was bad practice,
     so I fixed it by moving the check to within the deactive function so the tests would not fail.
+
+
+6. Error message for max elements activated was being printed when there was no error
+
+Fix: I checked the guard clause and realized the message was being printed AFTER the return, which means
+    it was never reached, but instead printing every time there was no error
+    And I also forgot to put the endl at the end so I fixed that too.

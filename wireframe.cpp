@@ -155,6 +155,11 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
 }
 
 void activateElement(array<list<string>, 3>& system, string system_name) {
+    if (system[ELE_LIST].size() >= DATA_COUNT) { // Prevent runaway activation :P
+        cout << "\t\tMax elements already activated..." << endl;
+        return;
+    }
+
     string prefix = "BOILER_";
     if (system_name == SYSTEM_2) {
         prefix = "ROD_";
