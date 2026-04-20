@@ -44,7 +44,7 @@ void step(map<string, array<list<string>, 3>>&);
     // Parameters: map of components
 void output(const map<string, array<list<string>, 3>>&);
 void loadData(map<string, array<list<string>, 3>>&, string);
-void genRand(int, int);
+string genRand(int, int);
 
 void activateElement(array<list<string>, 3>&, string);
 void deactivateElement(array<list<string>, 3>&);
@@ -91,32 +91,32 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         // Randomly decide to active/deactive any components
 
     for (auto& system : reactor) {
-        cout << "~~~~~~~~ " << system.first << " ~~~~~~~~" << endl;
+        cout << "\t" << system.first << ":" << endl;
          // 80% probability of fluctuations
-        int prob = rand() % MAX + 1; // Generates numbers 0 to 99 inclusive
+        int prob = rand() % MAX + 1; // Generates numbers 1 to 100 inclusive
         if (prob <= PROB_FLUX) {
-            cout << "Normal Fluctuations Occuring..." << endl;
+            cout << "\t\tNormal Fluctuations Occuring..." << endl;
             fluctuate(system.second);
         }
 
         // Deactivate an element
         prob = rand() % MAX + 1;
         if (prob <= PROB_DEACT && system.second[ELE_LIST].size() > 0) {
-            cout << "Deactivating an element..." << endl;
+            cout << "\t\tDeactivating an element..." << endl;
             deactivateElement(system.second);
         }
 
         // Active an element
         prob = rand() % MAX + 1;
         if (prob <= PROB_ACT) {
-            cout << "Activating an element..." << endl;
+            cout << "\t\tActivating an element..." << endl;
             activateElement(system.second, system.first);
         }
 
         // Temperature surge!!!
         prob = rand() % MAX + 1;
         if (prob <= PROB_MELT) {
-            cout << "!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
+            cout << "\t\t!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
             surge(system.second);
         }
     }
@@ -127,23 +127,23 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
         // Output active elements
         // Output electricity draws
         // Output temperatures
-    cout << "++++++++++ SNAPSHOT ++++++++++" << endl;
+    cout << "+++++ SNAPSHOT +++++" << endl;
 
     for (auto system : reactor) {
-        cout << "~~~~~~~~ " << system.first << " ~~~~~~~~" << endl;
-        cout << "Active Components: "; 
+        cout << "\t" << system.first << ":" << endl;
+        cout << "\t\tActive Components: "; 
         for (auto data : system.second[ELE_LIST]) {
             cout << data << " ";
         }
         cout << endl;
 
-        cout << "Power Draws: "; 
+        cout << "\t\tPower Draws: "; 
         for (auto data : system.second[POWER_LIST]) {
             cout << data << " ";
         }
         cout << endl;
 
-        cout << "Temperatures: "; 
+        cout << "\t\tTemperatures: "; 
         for (auto data : system.second[TEMP_LIST]) {
             cout << data << " ";
         }
@@ -160,9 +160,8 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
     }
 
     system[ELE_LIST].push_back(prefix + to_string(system[ELE_LIST].size() + 1));
-    system[POWER_LIST].push_back(to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW");
-    system[TEMP_LIST].push_back(to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C");
-    
+    system[POWER_LIST].push_back(genRand(MIN_POWER, MAX_POWER) + "MW");
+    system[TEMP_LIST].push_back(genRand(MIN_TEMP, MAX_TEMP) + "C");
 }
 
 void deactivateElement(array<list<string>, 3>& system) {
@@ -174,24 +173,24 @@ void deactivateElement(array<list<string>, 3>& system) {
 void fluctuate(array<list<string>, 3>& system) {
     // Fluctuate Powers
     for (string& power : system[POWER_LIST]) {
-        power = to_string(rand() % (MAX_POWER - MIN_POWER + 1) + MIN_POWER) + "MW";
+        power = genRand(MIN_POWER, MAX_POWER) + "MW";
     }
 
     // Fluctuare Temps
     for (string& temp : system[TEMP_LIST]) {
-        temp = to_string(rand() % (MAX_TEMP - MIN_TEMP + 1) + MIN_TEMP) + "C";
+        temp = genRand(MIN_TEMP, MAX_TEMP) + "C";
     }
 }
 
 void surge(array<list<string>, 3>& system) {
     // Surge Powers
     for (string& power : system[POWER_LIST]) {
-        power = to_string(rand() % (MAX_MELTDOWN_POWER - MIN_MELTDOWN_POWER + 1) + MIN_MELTDOWN_POWER) + "MW";
+        power = genRand(MIN_MELTDOWN_POWER, MAX_MELTDOWN_POWER) + "MW";
     }
 
     // Surge Temps
     for (string& temp : system[TEMP_LIST]) {
-        temp = to_string(rand() % (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C";
+        temp = genRand(MIN_MELTDOWN_TEMP, MAX_MELTDOWN_TEMP) + "C";
     }
 }
 
@@ -228,6 +227,6 @@ void loadData(map<string, array<list<string>, 3>>& reactor, string file_name) {
     }
 }
 
-void genRand(int min, int max) {
-    return rand() % (max - min + 1) + min;
+string genRand(int min, int max) {
+    return to_string(rand() % (max - min + 1) + min);
 }

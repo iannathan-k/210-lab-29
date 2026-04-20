@@ -5,3 +5,10 @@ Fix: Remove the const from the  prototype and match it with the definitions.
 2. Return error, where genRand was trying to return an int when I marked it as a void
 
 Fix: Change the return type to int to match then need
+
+3. Temperature outputted was significantly higher than it should have been
+
+Fix: I went through the code to where assignments were happening and found that I had used MAX_POWER instead of
+    MAX_TEMP, so I replaced it and re-ran to check whether it fixed the issue.
+
+    
