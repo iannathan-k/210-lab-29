@@ -32,3 +32,12 @@ Fix: I checked the guard clause and realized the message was being printed AFTER
 
 Fix: I didn't carry the 1, which caused the number suffix to be based on the length of the list before
     adding the new element, which would be 1-based-index minus 1, so I just added 1 to the end like before.
+
+8. When adding or removing lines from the file to read from, the remaining slots until DATA_COUNT were
+    filled with blank spaces, which caused the next activation to skip all the way. E.g ROD_8    ROD_12.
+
+FIX: Use a while loop instead, to terminate when EOF.
+
+9. When testing with a desynced array of lists, the deactivate threw an error
+
+FIX: 

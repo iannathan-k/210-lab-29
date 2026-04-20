@@ -30,7 +30,7 @@ const int PROB_DEACT = 20;
 const int PROB_MELT = 5;
 
 const int DATA_LENGTH = 3;
-const int DATA_COUNT = 12;
+const int MAX_COUNT = 12;
 
 const int DURATION = 36;
 
@@ -158,7 +158,9 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
 }
 
 void activateElement(array<list<string>, 3>& system, string system_name) {
-    if (system[ELE_LIST].size() >= DATA_COUNT) { // Prevent runaway activation :P
+    if (system[ELE_LIST].size() >= MAX_COUNT
+        || system[POWER_LIST].size() >= MAX_COUNT
+        || system[TEMP_LIST].size() >= MAX_COUNT) { // Prevent runaway activation :P
         cout << "\t\tMax elements already activated..." << endl;
         return;
     }
@@ -179,7 +181,9 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
 }
 
 void deactivateElement(array<list<string>, 3>& system) {
-    if (system[ELE_LIST].size() <= 0) {
+    if (system[ELE_LIST].size() <= 0
+        || system[POWER_LIST].size() <= 0
+        || system[TEMP_LIST].size() <= 0) {
         cout << "\t\tNo element to deactivate..." << endl;
         return;
     }
@@ -218,11 +222,11 @@ void loadData(map<string, array<list<string>, 3>>& reactor, string file_name) {
     fin.open(file_name);
 
     if (!fin.good()) {
-        cout << "Something went wrong with reading" << endl;
+        cout << "Something went wrong with reading..." << endl;
         exit(1);
     }
 
-    for (int j = 0; j < DATA_COUNT; j++) {
+    while (fin.good()) {
         for (int i = 0; i < DATA_LENGTH; i++) {
             string input;
             fin >> input;
