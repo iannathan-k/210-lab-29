@@ -11,4 +11,12 @@ Fix: Change the return type to int to match then need
 Fix: I went through the code to where assignments were happening and found that I had used MAX_POWER instead of
     MAX_TEMP, so I replaced it and re-ran to check whether it fixed the issue.
 
-    
+4. When changing the name of the file, the file was not found.
+
+Fix: I went to the definition for loadData, and found that I was still doing .open("initial.txt") rather than
+    file_name, so I went and changed that.
+
+5. When using Unit Tests, deactive seemed to throw an error when passed an empty list.
+
+Fix: Previous testing required the step function to catch when the list was empty, which was bad practice,
+    so I fixed it by moving the check to within the deactive function so the tests would not fail.

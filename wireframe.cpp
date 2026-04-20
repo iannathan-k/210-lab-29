@@ -6,6 +6,7 @@
 #include <list>
 #include <random>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 
@@ -31,7 +32,9 @@ const int PROB_MELT = 5;
 const int DATA_LENGTH = 3;
 const int DATA_COUNT = 12;
 
-const int DURATION = 48;
+const int DURATION = 36;
+
+const string FILE_NAME = "start.txt";
 
 const string SYSTEM_1 = "CORE";
 const string SYSTEM_2 = "COOLING";
@@ -71,7 +74,7 @@ int main() {
         // Raise error
     // Close file
     
-    loadData(reactor, "initial.txt");
+    loadData(reactor, FILE_NAME);
     output(reactor);
 
     for (int i = 1; i <= DURATION; i++) {
@@ -101,7 +104,7 @@ void step(map<string, array<list<string>, 3>>& reactor) {
 
         // Deactivate an element
         prob = rand() % MAX + 1;
-        if (prob <= PROB_DEACT && system.second[ELE_LIST].size() > 0) {
+        if (prob <= PROB_DEACT) {
             cout << "\t\tDeactivating an element..." << endl;
             deactivateElement(system.second);
         }
@@ -165,6 +168,11 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
 }
 
 void deactivateElement(array<list<string>, 3>& system) {
+    if (system[ELE_LIST].size() <= 0) {
+        cout << "\t\tNo element to deactivate..." << endl;
+        return;
+    }
+
     system[ELE_LIST].pop_back();
     system[POWER_LIST].pop_back();
     system[TEMP_LIST].pop_back();
@@ -196,7 +204,7 @@ void surge(array<list<string>, 3>& system) {
 
 void loadData(map<string, array<list<string>, 3>>& reactor, string file_name) {
     ifstream fin;
-    fin.open("initial.txt");
+    fin.open(file_name);
 
     if (!fin.good()) {
         cout << "Something went wrong with reading" << endl;
