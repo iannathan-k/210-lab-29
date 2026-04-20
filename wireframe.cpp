@@ -43,6 +43,8 @@ void step(map<string, array<list<string>, 3>>&);
 // Define function to print reactor at time
     // Parameters: map of components
 void output(const map<string, array<list<string>, 3>>&);
+void loadData(map<string, array<list<string>, 3>>&, string);
+void genRand(int, int);
 
 void activateElement(array<list<string>, 3>&, string);
 void deactivateElement(array<list<string>, 3>&);
@@ -68,38 +70,8 @@ int main() {
     // Else
         // Raise error
     // Close file
-
-    ifstream fin;
-    fin.open("initial.txt");
-
-    if (!fin.good()) {
-        cout << "Something went wrong with reading" << endl;
-        exit(1);
-    }
-
-    for (int j = 0; j < DATA_COUNT; j++) {
-        for (int i = 0; i < DATA_LENGTH; i++) {
-            string input;
-            fin >> input;
-
-            reactor[SYSTEM_1][i].push_back(input);
-        }
-
-        for (int i = 0; i < DATA_LENGTH; i++) {
-            string input;
-            fin >> input;
-
-            reactor[SYSTEM_2][i].push_back(input);
-        }
-
-        for (int i = 0; i < DATA_LENGTH; i++) {
-            string input;
-            fin >> input;
-
-            reactor[SYSTEM_3][i].push_back(input);
-        }
-    }
     
+    loadData(reactor, "initial.txt");
     output(reactor);
 
     for (int i = 1; i <= DURATION; i++) {
@@ -221,4 +193,41 @@ void surge(array<list<string>, 3>& system) {
     for (string& temp : system[TEMP_LIST]) {
         temp = to_string(rand() % (MAX_MELTDOWN_TEMP - MIN_MELTDOWN_TEMP + 1) + MIN_MELTDOWN_TEMP) + "C";
     }
+}
+
+void loadData(map<string, array<list<string>, 3>>& reactor, string file_name) {
+    ifstream fin;
+    fin.open("initial.txt");
+
+    if (!fin.good()) {
+        cout << "Something went wrong with reading" << endl;
+        exit(1);
+    }
+
+    for (int j = 0; j < DATA_COUNT; j++) {
+        for (int i = 0; i < DATA_LENGTH; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_1][i].push_back(input);
+        }
+
+        for (int i = 0; i < DATA_LENGTH; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_2][i].push_back(input);
+        }
+
+        for (int i = 0; i < DATA_LENGTH; i++) {
+            string input;
+            fin >> input;
+
+            reactor[SYSTEM_3][i].push_back(input);
+        }
+    }
+}
+
+void genRand(int min, int max) {
+    return rand() % (max - min + 1) + min;
 }

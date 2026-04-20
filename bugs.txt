@@ -1,0 +1,7 @@
+1. Linker Error because I had declared the map parameter as const in the declaration, but made changes in the definition
+
+Fix: Remove the const from the  prototype and match it with the definitions.
+
+2. Return error, where genRand was trying to return an int when I marked it as a void
+
+Fix: Change the return type to int to match then need
