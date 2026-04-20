@@ -1,5 +1,5 @@
 Overview
-My project will simulate a nuclear power plant over the next 72 hours and its components, designed to measure
+My project will simulate a nuclear power plant over the next 36 hours and its components, designed to measure
 and manage the cores over time, and hopefully prevent or predict any meltdowns!
 
 Implementation

@@ -1,0 +1,49 @@
+1. Linker Error because I had declared the map parameter as const in the declaration, but made changes in the definition
+
+Fix: Remove the const from the  prototype and match it with the definitions.
+
+2. Return error, where genRand was trying to return an int when I marked it as a void
+
+Fix: Change the return type to int to match then need
+
+3. Temperature outputted was significantly higher than it should have been
+
+Fix: I went through the code to where assignments were happening and found that I had used MAX_POWER instead of
+    MAX_TEMP, so I replaced it and re-ran to check whether it fixed the issue.
+
+4. When changing the name of the file, the file was not found.
+
+Fix: I went to the definition for loadData, and found that I was still doing .open("initial.txt") rather than
+    file_name, so I went and changed that.
+
+5. When using Unit Tests, deactive seemed to throw an error when passed an empty list.
+
+Fix: Previous testing required the step function to catch when the list was empty, which was bad practice,
+    so I fixed it by moving the check to within the deactive function so the tests would not fail.
+
+
+6. Error message for max elements activated was being printed when there was no error
+
+Fix: I checked the guard clause and realized the message was being printed AFTER the return, which means
+    it was never reached, but instead printing every time there was no error
+    And I also forgot to put the endl at the end so I fixed that too.
+
+7. When adding the first element, the list becomes 0 based rather than 1 based
+
+Fix: I didn't carry the 1, which caused the number suffix to be based on the length of the list before
+    adding the new element, which would be 1-based-index minus 1, so I just added 1 to the end like before.
+
+8. When adding or removing lines from the file to read from, the remaining slots until DATA_COUNT were
+    filled with blank spaces, which caused the next activation to skip all the way. E.g ROD_8    ROD_12.
+
+FIX: Use a while loop instead, to terminate when EOF.
+
+9. When testing with a desynced array of lists, the deactivate threw an error and activate exceeded
+
+FIX: THe problem was caused by the guard clauses only checking the ELE_LIST and not the two others, which
+    meant any desync would be problematic. The fix was to be more defensive and OR together all of the lists
+    to ensure all of them were compliant.
+
+10. Nothing was outputted when no elements were active, or no action was taken, which made it confusing for users
+
+FIX: Add a flag to check if there are no active elements, or if there was no action taken and explicitly say so.
