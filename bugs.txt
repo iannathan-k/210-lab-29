@@ -38,6 +38,12 @@ Fix: I didn't carry the 1, which caused the number suffix to be based on the len
 
 FIX: Use a while loop instead, to terminate when EOF.
 
-9. When testing with a desynced array of lists, the deactivate threw an error
+9. When testing with a desynced array of lists, the deactivate threw an error and activate exceeded
 
-FIX: 
+FIX: THe problem was caused by the guard clauses only checking the ELE_LIST and not the two others, which
+    meant any desync would be problematic. The fix was to be more defensive and OR together all of the lists
+    to ensure all of them were compliant.
+
+10. Nothing was outputted when no elements were active, or no action was taken, which made it confusing for users
+
+FIX: Add a flag to check if there are no active elements, or if there was no action taken and explicitly say so.

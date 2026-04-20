@@ -10,11 +10,13 @@
 
 using namespace std;
 
+// COMSC-210 | Lab 31 | Ian Kusmiantoro
+
 const int ELE_LIST = 0;
 const int POWER_LIST = 1;
 const int TEMP_LIST = 2;
 
-const int MAX = 100;
+const int MAX_PROB = 100;
 const int MAX_POWER = 250000;
 const int MIN_POWER = 100000;
 const int MAX_TEMP = 1000;
@@ -97,33 +99,43 @@ void step(map<string, array<list<string>, 3>>& reactor) {
         // Randomly decide to active/deactive any components
 
     for (auto& system : reactor) {
+        bool action_flag = false;
+        
         cout << "\t" << system.first << ":" << endl;
          // 80% probability of fluctuations
-        int prob = rand() % MAX + 1; // Generates numbers 1 to 100 inclusive
+        int prob = rand() % MAX_PROB + 1; // Generates numbers 1 to 100 inclusive
         if (prob <= PROB_FLUX) {
             cout << "\t\tNormal Fluctuations Occuring..." << endl;
             fluctuate(system.second);
+            action_flag = true;
         }
 
         // Deactivate an element
-        prob = rand() % MAX + 1;
+        prob = rand() % MAX_PROB + 1;
         if (prob <= PROB_DEACT) {
             cout << "\t\tDeactivating an element..." << endl;
             deactivateElement(system.second);
+            action_flag = true;
         }
 
         // Active an element
-        prob = rand() % MAX + 1;
+        prob = rand() % MAX_PROB + 1;
         if (prob <= PROB_ACT) {
             cout << "\t\tActivating an element..." << endl;
             activateElement(system.second, system.first);
+            action_flag = true;
         }
 
         // Temperature surge!!!
-        prob = rand() % MAX + 1;
+        prob = rand() % MAX_PROB + 1;
         if (prob <= PROB_MELT) {
             cout << "\t\t!! EMERGENCY !! Power Surge Occuring!!!!" << endl;
             surge(system.second);
+            action_flag = true;
+        }
+
+        if (!action_flag) {
+            cout << "\t\tNothing meaningful happened..." << endl;
         }
     }
 }
@@ -137,7 +149,15 @@ void output(const map<string, array<list<string>, 3>>& reactor) {
 
     for (auto system : reactor) {
         cout << "\t" << system.first << ":" << endl;
+        if (system.second[ELE_LIST].empty()
+            || system.second[POWER_LIST].empty()
+            || system.second[TEMP_LIST].empty()) {
+                cout << "\t\tSystem is curently inactive..." << endl;
+                continue;
+            }
+
         cout << "\t\tActive Components: "; 
+        
         for (auto data : system.second[ELE_LIST]) {
             cout << data << " ";
         }
