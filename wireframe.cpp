@@ -39,6 +39,9 @@ const string FILE_NAME = "start.txt";
 const string SYSTEM_1 = "CORE";
 const string SYSTEM_2 = "COOLING";
 const string SYSTEM_3 = "WASTE";
+const string SYSTEM_1_PREFIX = "BOILER";
+const string SYSTEM_2_PREFIX = "ROD";
+const string SYSTEM_3_PREFIX = "PUMP";
 
 // Define function to simulate reactor over 1 time period
     // Parameters: map of components
@@ -160,14 +163,17 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
         return;
     }
 
-    string prefix = "BOILER_";
-    if (system_name == SYSTEM_2) {
-        prefix = "ROD_";
+    string prefix = "";
+    if (system_name == SYSTEM_1) {
+        prefix = SYSTEM_1_PREFIX;
+    } else if (system_name == SYSTEM_2) {
+        prefix = SYSTEM_2_PREFIX;
     } else if (system_name == SYSTEM_3) {
-        prefix = "PUMP_";
+        prefix = SYSTEM_3_PREFIX;
     }
+    prefix += "_" + to_string(system[ELE_LIST].size());
 
-    system[ELE_LIST].push_back(prefix + to_string(system[ELE_LIST].size() + 1));
+    system[ELE_LIST].push_back(prefix);
     system[POWER_LIST].push_back(genRand(MIN_POWER, MAX_POWER) + "MW");
     system[TEMP_LIST].push_back(genRand(MIN_TEMP, MAX_TEMP) + "C");
 }

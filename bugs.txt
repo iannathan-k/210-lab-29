@@ -27,3 +27,5 @@ Fix: Previous testing required the step function to catch when the list was empt
 Fix: I checked the guard clause and realized the message was being printed AFTER the return, which means
     it was never reached, but instead printing every time there was no error
     And I also forgot to put the endl at the end so I fixed that too.
+
+7. 
