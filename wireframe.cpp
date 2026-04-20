@@ -171,7 +171,7 @@ void activateElement(array<list<string>, 3>& system, string system_name) {
     } else if (system_name == SYSTEM_3) {
         prefix = SYSTEM_3_PREFIX;
     }
-    prefix += "_" + to_string(system[ELE_LIST].size());
+    prefix += "_" + to_string(system[ELE_LIST].size() + 1);
 
     system[ELE_LIST].push_back(prefix);
     system[POWER_LIST].push_back(genRand(MIN_POWER, MAX_POWER) + "MW");
@@ -244,6 +244,8 @@ void loadData(map<string, array<list<string>, 3>>& reactor, string file_name) {
             reactor[SYSTEM_3][i].push_back(input);
         }
     }
+
+    fin.close();
 }
 
 string genRand(int min, int max) {
